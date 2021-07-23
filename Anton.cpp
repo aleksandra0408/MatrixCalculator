@@ -1,117 +1,95 @@
 #include "prototype.h"
-using namespace std;
+using namespace std; 
 
-int  calculator::check_Lines(matrix& x)
+matrix calculator::del_Line_Column(matrix x, int i, int j)
 {
-	int dependLine = -1;
-	vector<double> tempLine;
-	tempLine.resize(x.columns);
-	for (int i = 0; i < x.lines - 1; i++)
+	x.table.erase(x.table.begin() + i);
+	x.lines = x.table.size();
+	for (int n = 0; n < x.lines; n++)
 	{
-		tempLine.clear();
-		tempLine.resize(x.columns);
-		for (int n = 0; n <= i; n++)
-		{
-			for (int m = 0; m < x.columns; m++)
-			{
-				tempLine[m] = tempLine[m] + x.table[n][m];
-			}
-		}
-
-		int cnt = 0;
-		cnt = i + 1;
-		for (int s = cnt; s < x.lines; s++)
-		{
-			int zeros;
-			vector<double> tempLine1;
-			tempLine1.clear();
-			tempLine1.resize(x.columns);
-			double tempMultipler = 0;
-			tempMultipler = x.table[s][0] / tempLine[0];
-			for (int n = 0; n < x.columns; n++)
-			{
-				tempLine1[n] = x.table[s][n] - tempLine[n] * tempMultipler;
-			}
-			zeros = 0;
-			for (int n = 0; n < x.columns; n++)
-			{
-				zeros = zeros + tempLine1[n];
-			}
-			if (zeros == 0)
-			{
-				x.table.erase(x.table.begin() + s);
-				x.lines--;
-				s--;
-				dependLine = 1;
-			}
-		}
+		x.table[n].erase(x.table[n].begin() + j);
 	}
-	return dependLine;
+	x.columns = x.table[0].size();
+	return x;
 }
-void calculator::shift(matrix& x)
+void calculator::minor_Enum(matrix x)
 {
-	check_Lines(x);
-	matrix tempM;
-	tempM.table.resize(x.lines);
-	for (int i = 0; i < x.lines; i++)
+	matrix nMinor = x;
+	if (nMinor.lines == 2)
 	{
-		tempM.table[i].resize(x.columns);
-	}
-	tempM.lines = x.lines;
-	tempM.columns = x.columns;
-
-	for (int i = 0; i < x.columns; i++)
-	{
-		tempM.table[0][i] = x.table[x.lines - 1][i];
-	}
-
-	for (int i = 0; i < x.lines - 1; i++)
-	{
-		for (int j = 0; j < x.columns; j++)
+		if (x.table[0][0] * x.table[1][1] - x.table[0][1] * x.table[1][0] == 0)
 		{
-			tempM.table[i + 1][j] = x.table[i][j];
+			if ((x.table[0][0] == 0) && (x.table[1][1] == 0) && (x.table[0][1] == 0) && (x.table[1][0] == 0));
+			else rankList[1] = 1;
+		}
+		else rankList[2] = 1;
+	}
+	else
+	{
+		if (matrixDet(nMinor, nMinor.lines) != 0) rankList[nMinor.lines] = 1;
+		for (int i = 0; i < x.lines; i++)
+		{
+			for (int j = 0; j < x.columns; j++)
+			{
+				nMinor = del_Line_Column(x, i, j);
+				if (matrixDet(nMinor, nMinor.table.size()) != 0) rankList[nMinor.lines] = 1;
+				minor_Enum(nMinor);
+			}
 		}
 	}
 
-	for (int i = 0; i < x.lines; i++)
-	{
-		for (int j = 0; j < x.columns; j++)
-		{
-			x.table[i][j] = tempM.table[i][j];
-		}
-	}
 }
-void calculator::resort(matrix& x)
+void calculator::matrix_Rank()
 {
-	matrix tempM;
-	tempM.table.resize(x.lines);
-	for (int i = 0; i < x.lines; i++)
+	double rank = 0;
+	matrix x;
+	filling(x,1);
+	
+	for (int i = 0; i <= x.lines; i++)
 	{
-		tempM.table[i].resize(x.columns);
+		rankList.push_back(0);
 	}
-	tempM.lines = x.lines;
-	tempM.columns = x.columns;
-	tempM.table = x.table;
+	
 
-	for (int i = 0; i < x.lines - 1; i++)
+	
+	if (x.lines == x.columns)
 	{
-		for (int j = i; j < x.lines - 1; j++)
+		if (x.lines == 0)           rank = 0;
+		else if (x.lines == 1)
 		{
-			vector<double> tempLine;
-			tempLine.clear();
-			tempLine.resize(x.columns);
-
-			tempLine = x.table[j + 1];
-			x.table[j + 1] = x.table[i];
-			x.table[i] = tempLine;
-
-			show(x);
-			x.table = tempM.table;
+			if (x.table[0][0] == 0) rank = 0;
+			else                    rank = 1;
 		}
-		x.table = tempM.table;
+		else if (x.lines == 2)
+		{
+			rank = x.table[0][0] * x.table[1][1] - x.table[0][1] * x.table[1][0];
+			if ((rank == 0) && (x.table[0][0] == 0) && (x.table[1][1] == 0) && (x.table[0][1] == 0) && (x.table[1][0] == 0)) {}
+			else if (rank == 0)     rank = 1;
+			else                    rank = 2;
+		}
+		else
+		{
+			minor_Enum(x);
+			for (int i = 0; i < rankList.size(); i++)
+			{
+				cout << rankList[i];
+			}
+			cout << endl;
+			for (int i = rankList.size()-1; i >= 0; i--)
+			{
+				if (rankList[i] != 0)
+				{
+					rank = i;
+					break;
+				}
+			}
+		}
 	}
-}
-int  calculator::rank()
-{
-	return 0;
+	else
+	{
+
+	}
+	cout << "Your Matrix Rank is: " << rank << endl;
+	system("pause");
+	rankList.resize(0);
 }

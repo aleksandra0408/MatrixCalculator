@@ -1,4 +1,4 @@
-  #include "prototype.h"
+#include "prototype.h"
 using namespace std;
 int main()
 {
@@ -6,4 +6,3 @@ int main()
 	calcV1.menu();
 	return 0;
 }
-
