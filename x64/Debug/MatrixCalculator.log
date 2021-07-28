@@ -1,0 +1,12 @@
+﻿  Anton.cpp
+C:\Users\malig\practica\MatrixCalculator\Anton.cpp(7,26): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\malig\practica\MatrixCalculator\Anton.cpp(12,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\malig\practica\MatrixCalculator\Anton.cpp(35,8): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\malig\practica\MatrixCalculator\Anton.cpp(78,4): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+  Common.cpp
+  Dasha.cpp
+  Matvey.cpp
+  Sasha.cpp
+  Source.cpp
+  Создание кода...
+  MatrixCalculator.vcxproj -> C:\Users\malig\practica\MatrixCalculator\x64\Debug\MatrixCalculator.exe

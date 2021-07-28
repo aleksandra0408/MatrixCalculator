@@ -26,7 +26,7 @@ private:
 	void multiplication(matrix& x, matrix& y, matrix& z);
 	void deleteLinAndCol(matrix x, int size, int lin, int col, matrix& newmatrix);
 	double  matrixDet(matrix x, int size);
-	void InverseMatrix(matrix& x, int size);
+	int InverseMatrix(matrix& x, int size);
 	void sum();
 	void sub();
 	void multi_number();

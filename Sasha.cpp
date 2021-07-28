@@ -13,18 +13,18 @@ void calculator::deleteLinAndCol(matrix x, int size, int lin, int col, matrix& n
 			newmatrix.table[i].push_back(0);
 		}
 	}
-	for (int i = 0; i < size - 1; i++) 
+	for (int i = 0; i < size - 1; i++)
 	{
 		if (i == lin) offsetLin = 1;
 		offsetCol = 0;
-		for (int j = 0; j < size - 1; j++) 
+		for (int j = 0; j < size - 1; j++)
 		{
 			if ((j == col) && (j != (size - 1))) offsetCol = 1;
 			newmatrix.table[i][j] = x.table[i + offsetLin][j + offsetCol];
 		}
 	}
 }
-double  calculator::matrixDet(matrix x, int size) 
+double  calculator::matrixDet(matrix x, int size)
 {
 	double det = 0;
 	int degree = 1;
@@ -41,9 +41,13 @@ double  calculator::matrixDet(matrix x, int size)
 	}
 	return det;
 }
-void calculator::InverseMatrix(matrix& x, int size)
+int calculator::InverseMatrix(matrix& x, int size)
 {
 	double p = matrixDet(x, x.columns);
+	if (p == 0) {
+		cout << "Error.The determinant is zero." << endl;
+		return 0;
+	}
 	cout << p << endl;
 	matrix a;
 	a.table.resize(x.columns);
@@ -56,25 +60,29 @@ void calculator::InverseMatrix(matrix& x, int size)
 	}
 	a.columns = x.columns;
 	a.lines = x.lines;
-
 	matrix newmatrix;
-	for (int i = 0; i < x.columns; i++)
-	{
-		newmatrix.columns = x.columns - 1;
-		newmatrix.lines = x.lines - 1;
-		for (int j = 0; j < x.columns; j++)
-		{
+	newmatrix.columns = x.columns - 1;
+	newmatrix.lines = x.lines - 1;
+	for (int i = 0;i < x.columns; i++) {
+		for (int j = 0; j < x.columns; j++) {
 			deleteLinAndCol(x, x.columns, i, j, newmatrix);
-			a.table[i][j] = pow(-1, (i + 1) * (j + 1)) * fabs(matrixDet(newmatrix, newmatrix.columns));
+			int st = (i + j);
+			int result = -1;
+			for (int m = 0; m <= st;m++) {
+				result = result * (-1);
+			}
+			double d = matrixDet(newmatrix, newmatrix.columns);
+			a.table[i][j] = result * d;
 		}
 	}
 	show(a);
 	cout << endl;
-
 	matrix c;
 	c.columns = x.columns;
 	c.lines = x.lines;
-	multiply_on_number(a, c, 1 / p);
+	multiply_on_number(a, c, (1 / p));
+	show(c);
+	return 1;
 }
 double  calculator::Det()
 {
@@ -83,9 +91,10 @@ double  calculator::Det()
 	filling(x, 3);
 	cout << "Your matrix: " << endl;
 	show(x);
+	cin.ignore();
 	return matrixDet(x, x.columns);
 }
-void calculator::Inverse() 
+void calculator::Inverse()
 {
 	matrix x;
 	cout << "--- 1 matrix --- " << endl;
